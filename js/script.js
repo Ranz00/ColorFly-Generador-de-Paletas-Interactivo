@@ -31,55 +31,140 @@ function obtenerSize() {
   return parseInt(document.querySelector('select[name="color-count"]').value)
 }
 
+// Copia el valor del color al portapapeles
+function copiarAlPortapapeles(texto) {
+  navigator.clipboard.writeText(texto).then(() => {
+    mostrarFeedback(`¡Copiado: ${texto}!`)
+  })
+}
+
+// Crea el icono de candado para bloquear colores
+function crearCandado(colorDiv, colorHEX, colorHSL) {
+  const candado = document.createElement('button')
+  candado.classList.add('lock-btn')
+  candado.innerHTML = '🔓'
+  candado.title = 'Bloquear color'
+  // Alterna el estado bloqueado de la tarjeta
+  candado.addEventListener('click', (e) => {
+    e.stopPropagation() // Evita que el click llegue al clipboard
+    const bloqueado = colorDiv.dataset.locked === 'true'
+    colorDiv.dataset.locked = bloqueado ? 'false' : 'true'
+    candado.innerHTML = bloqueado ? '🔓' : '🔒'
+    colorDiv.classList.toggle('locked', !bloqueado)
+  })
+  return candado
+}
+
+// Guarda la paleta actual en localStorage
+function guardarPaleta() {
+  const cards = document.querySelectorAll('.color-card')
+  const datos = Array.from(cards).map((card) => ({
+    hex: card.dataset.hex,
+    hsl: card.dataset.hsl,
+    locked: card.dataset.locked === 'true',
+  }))
+  localStorage.setItem('colorfly-paleta', JSON.stringify(datos))
+}
+
+// Restaura la paleta guardada desde localStorage
+function restaurarPaleta() {
+  const guardado = localStorage.getItem('colorfly-paleta')
+  if (!guardado) return
+  const datos = JSON.parse(guardado)
+  const contenedor = document.getElementById('color-boxes')
+  contenedor.innerHTML = ''
+  datos.forEach(({ hex, hsl, locked }) => {
+    const colorDiv = crearTarjeta(hex, hsl)
+    if (locked) {
+      colorDiv.dataset.locked = 'true'
+      colorDiv.classList.add('locked')
+      colorDiv.querySelector('.lock-btn').innerHTML = '🔒'
+    }
+    contenedor.appendChild(colorDiv)
+  })
+}
+
+// Crea una tarjeta de color completa con label, candado y clipboard
+function crearTarjeta(colorHEX, colorHSL) {
+  const colorDiv = document.createElement('div')
+  colorDiv.classList.add('color-card')
+  colorDiv.setAttribute('data-hex', colorHEX)
+  colorDiv.setAttribute('data-hsl', colorHSL)
+  colorDiv.setAttribute('data-locked', 'false')
+  colorDiv.style.backgroundColor = colorHEX
+
+  // Etiqueta visible en hover
+  const label = document.createElement('span')
+  label.classList.add('color-label')
+  label.textContent = formatoActual === 'hex' ? colorHEX : colorHSL
+  colorDiv.appendChild(label)
+
+  // Botón candado
+  const candado = crearCandado(colorDiv, colorHEX, colorHSL)
+  colorDiv.appendChild(candado)
+
+  // Click en tarjeta copia el color al portapapeles
+  colorDiv.addEventListener('click', () => {
+    const valor =
+      formatoActual === 'hex' ? colorDiv.dataset.hex : colorDiv.dataset.hsl
+    copiarAlPortapapeles(valor)
+  })
+
+  return colorDiv
+}
+
 // Genera la paleta y la renderiza en el DOM
 function generarPaleta() {
   const tamaño = obtenerSize()
   const contenedor = document.getElementById('color-boxes')
-  // Limpia el contenedor antes de agregar nuevos colores
+  // Conserva las tarjetas bloqueadas
+  const bloqueadas = Array.from(
+    contenedor.querySelectorAll('.color-card[data-locked="true"]'),
+  )
   contenedor.innerHTML = ''
+
+  let indiceBloqueado = 0
   for (let i = 0; i < tamaño; i++) {
-    const colorHSL = generarColorHSL()
-    const partes = colorHSL.match(/\d+/g)
-    const h = parseInt(partes[0])
-    const s = parseInt(partes[1])
-    const l = parseInt(partes[2])
-    const colorHEX = HSLaHEX(h, s, l)
-    // Crea una tarjeta con label de código
-    const colorDiv = document.createElement('div')
-    colorDiv.classList.add('color-card')
-    colorDiv.setAttribute('data-hex', colorHEX)
-    colorDiv.setAttribute('data-hsl', colorHSL)
-    colorDiv.style.backgroundColor = colorHEX
-    // Etiqueta visible en hover
-    const label = document.createElement('span')
-    label.classList.add('color-label')
-    label.textContent = formatoActual === 'hex' ? colorHEX : colorHSL
-    colorDiv.appendChild(label)
+    let colorDiv
+    // Si hay tarjeta bloqueada para esta posición, la reutiliza
+    if (bloqueadas[indiceBloqueado] && indiceBloqueado < bloqueadas.length) {
+      colorDiv = bloqueadas[indiceBloqueado]
+      indiceBloqueado++
+    } else {
+      const colorHSL = generarColorHSL()
+      const partes = colorHSL.match(/\d+/g)
+      const h = parseInt(partes[0])
+      const s = parseInt(partes[1])
+      const l = parseInt(partes[2])
+      const colorHEX = HSLaHEX(h, s, l)
+      colorDiv = crearTarjeta(colorHEX, colorHSL)
+    }
     contenedor.appendChild(colorDiv)
   }
+  guardarPaleta()
 }
 
-// Muestra un toast de feedback al generar la paleta
-function mostrarFeedback() {
-  const mensaje = document.createElement('div')
-  mensaje.textContent = '¡Paleta generada!'
-  mensaje.classList.add('toast')
-  document.body.appendChild(mensaje)
+// Muestra un toast de feedback
+function mostrarFeedback(mensaje = '¡Paleta generada!') {
+  const toast = document.createElement('div')
+  toast.textContent = mensaje
+  toast.classList.add('toast')
+  document.body.appendChild(toast)
   // Activa la clase visible para disparar la transición
-  requestAnimationFrame(() => mensaje.classList.add('visible'))
+  requestAnimationFrame(() => toast.classList.add('visible'))
   setTimeout(() => {
-    mensaje.classList.remove('visible')
-    mensaje.classList.add('fade-out')
+    toast.classList.remove('visible')
+    toast.classList.add('fade-out')
     // Elimina el elemento del DOM tras la transición
-    setTimeout(() => document.body.removeChild(mensaje), 300)
+    setTimeout(() => document.body.removeChild(toast), 300)
   }, 2000)
 }
 
 // Event listener para el botón de generar paleta
 const btnGenerar = document.getElementById('generate-palette')
 btnGenerar.addEventListener('click', () => {
-  generarPaleta() // Llama a la función para generar la paleta
-  mostrarFeedback() // Muestra el feedback
+  generarPaleta()
+  mostrarFeedback()
 })
 
 // Alterna entre formato HEX y HSL en las etiquetas
@@ -94,3 +179,6 @@ btnToggle.addEventListener('click', () => {
       formatoActual === 'hex' ? card.dataset.hex : card.dataset.hsl
   })
 })
+
+// Restaura la última paleta guardada al cargar la página
+restaurarPaleta()
