@@ -62,6 +62,8 @@ main {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1rem 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .palette-selector label {
@@ -83,6 +85,8 @@ main {
 .controls {
   display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 /* Botones */
@@ -115,14 +119,15 @@ main {
 }
 
 .toggle-btn {
-  background-color: var(--surface);
-  color: var(--text-muted);
-  border: 1px solid var(--border);
+  background-color: #0d9488;
+  color: #fff;
+  border: 1px solid #24998f;
 }
 
 .toggle-btn:hover {
-  color: var(--text);
-  border-color: var(--primary);
+  background-color: #0f766e;
+  color: #fff;
+  border-color: #0d9488;
 }
 
 /* Sección preview */
@@ -142,18 +147,20 @@ main {
 
 /* Grid de colores */
 #color-boxes {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
+  justify-content: center;
 }
 
 /* Tarjeta de color */
 .color-card {
+  width: 120px;
   height: 140px;
   border-radius: var(--radius);
   position: relative;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px #0000004d;
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
@@ -162,7 +169,7 @@ main {
 
 .color-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 24px #00000066;
 }
 
 /* Código de color en hover */
@@ -171,7 +178,7 @@ main {
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: #00000099;
   color: #fff;
   font-size: 0.75rem;
   text-align: center;
@@ -185,36 +192,60 @@ main {
   opacity: 1;
 }
 
+/* Botón candado en tarjeta */
+.lock-btn {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  background: #00000066;
+  border: none;
+  border-radius: 6px;
+  padding: 0.2rem 0.4rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.color-card:hover .lock-btn {
+  opacity: 1;
+}
+
+.color-card.locked .lock-btn {
+  opacity: 1;
+}
+
 /* Toast */
 .toast {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  bottom: 4rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(1rem);
   padding: 0.75rem 1.25rem;
   background: var(--surface);
   border: 1px solid var(--border);
   color: var(--text);
   border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 16px #00000066;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(1rem);
   transition:
     opacity 0.3s ease,
     transform 0.3s ease,
     visibility 0.3s;
+  white-space: nowrap;
 }
 
 .toast.visible {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
+  transform: translateX(-50%) translateY(0);
 }
 
 .toast.fade-out {
   opacity: 0;
   visibility: hidden;
-  transform: translateY(1rem);
+  transform: translateX(-50%) translateY(1rem);
 }
 
 /* Footer */
@@ -224,4 +255,70 @@ footer {
   color: var(--text-muted);
   font-size: 0.8rem;
   border-top: 1px solid var(--border);
+}
+
+/* ── Responsive ── */
+
+/* Tablet */
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 1.6rem;
+  }
+
+  .color-card {
+    width: 100px;
+    height: 120px;
+  }
+
+  .generate-btn,
+  .toggle-btn {
+    padding: 0.65rem 1.25rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Smartphone */
+@media (max-width: 480px) {
+  header {
+    padding: 1.25rem 1rem;
+  }
+
+  header h1 {
+    font-size: 1.3rem;
+  }
+
+  main {
+    padding: 1.25rem 0.75rem;
+    gap: 1rem;
+  }
+
+  .palette-selector {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .controls {
+    width: 100%;
+  }
+
+  .generate-btn,
+  .toggle-btn {
+    flex: 1;
+    text-align: center;
+  }
+
+  .color-card {
+    width: 85px;
+    height: 105px;
+  }
+
+  .color-card .color-label {
+    opacity: 1;
+  }
+
+  .lock-btn {
+    opacity: 1;
+  }
 }
