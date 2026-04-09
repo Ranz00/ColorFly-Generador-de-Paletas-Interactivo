@@ -14,7 +14,7 @@ function HSLaHEX(h, s, l) {
   const a = s * Math.min(l, 1 - l)
   const f = (n) =>
     l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)))
-  return `#${[60, 180, 240]
+  return `#${[0, 8, 4]
     .map((x) =>
       Math.round(f(x) * 255)
         .toString(16)
