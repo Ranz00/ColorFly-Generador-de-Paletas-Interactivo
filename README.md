@@ -1,8 +1,8 @@
 # Colorfly Studio — Generador de Paletas de Colores
 
-> **Demo en vivo:** [Ver en GitHub Pages](https://ranz00.github.io/ColorFly-Generador-de-Paletas-Interactivo)
+> **Demo en vivo GitHub Pages:** [Ver en GitHub Pages](https://ranz00.github.io/ColorFly-Generador-de-Paletas-Interactivo)
 >
-> **Video demostración:** [Google Drive link](https://docs.google.com/document/d/1thcztAWEPRvuw4XVgHRj6D37uzKyKKGBa0sYXXv8Nnw/edit?usp=sharing)
+> **Documentación Google Drive:** [Google Drive link](https://docs.google.com/document/d/1thcztAWEPRvuw4XVgHRj6D37uzKyKKGBa0sYXXv8Nnw/edit?usp=sharing)
 
 ---
 
