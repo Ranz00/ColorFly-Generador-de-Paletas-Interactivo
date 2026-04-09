@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Colorfly Studio</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header role="banner">
+      <h1>Colorfly Studio</h1>
+    </header>
+
+    <main role="main">
+      <div class="palette-selector">
+        <label for="color-count">Selecciona el tamaño de la paleta:</label>
+        <select id="color-count" name="color-count">
+          <option value="6">6 colores</option>
+          <option value="8">8 colores</option>
+          <option value="9">9 colores</option>
+        </select>
+      </div>
+
+      <button id="generate-palette" role="button">Generar Paleta</button>
+
+      <section class="color-preview">
+        <h2>Previsualización de la paleta</h2>
+        <article id="color-boxes"></article>
+      </section>
+    </main>
+
+    <footer role="contentinfo">
+      <p>&copy; Colorfly Studio</p>
+    </footer>
+  </body>
+</html>
