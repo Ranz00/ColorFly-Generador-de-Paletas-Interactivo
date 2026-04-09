@@ -2,7 +2,7 @@
 
 > **Demo en vivo:** [Ver en GitHub Pages](https://ranz00.github.io/ColorFly-Generador-de-Paletas-Interactivo)
 >
-> **Video demostración:** `[PLACEHOLDER — Google Drive link]`
+> **Video demostración:** [Google Drive link](https://docs.google.com/document/d/1thcztAWEPRvuw4XVgHRj6D37uzKyKKGBa0sYXXv8Nnw/edit?usp=sharing)
 
 ---
 
@@ -66,5 +66,5 @@ Para el localStorage simplemente serializo la paleta en JSON al generarla y la r
 ## Autor
 
 **Héctor Ricardo Anzoátegui**  
-Proyecto Integrador FullStack M1  
+Proyecto Integrador - FullStack SoyHenry M1  
 [github.com/Ranz00](https://github.com/Ranz00)
