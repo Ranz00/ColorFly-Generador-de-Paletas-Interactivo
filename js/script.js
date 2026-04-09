@@ -1,3 +1,6 @@
+// Controla el formato de color mostrado en las tarjetas
+let formatoActual = 'hex'
+
 // Función para generar un color HSL aleatorio
 function generarColorHSL() {
   const h = Math.floor(Math.random() * 360) // Genera un ángulo aleatorio entre 0 y 359 grados
@@ -37,16 +40,21 @@ function generarPaleta() {
   for (let i = 0; i < tamaño; i++) {
     const colorHSL = generarColorHSL()
     const partes = colorHSL.match(/\d+/g)
-    const colorHEX = HSLaHEX(
-      parseInt(partes[0]),
-      parseInt(partes[1]),
-      parseInt(partes[2]),
-    )
-    // Crea una tarjeta por color
+    const h = parseInt(partes[0])
+    const s = parseInt(partes[1])
+    const l = parseInt(partes[2])
+    const colorHEX = HSLaHEX(h, s, l)
+    // Crea una tarjeta con label de código
     const colorDiv = document.createElement('div')
     colorDiv.classList.add('color-card')
-    colorDiv.setAttribute('data-color', colorHEX)
+    colorDiv.setAttribute('data-hex', colorHEX)
+    colorDiv.setAttribute('data-hsl', colorHSL)
     colorDiv.style.backgroundColor = colorHEX
+    // Etiqueta visible en hover
+    const label = document.createElement('span')
+    label.classList.add('color-label')
+    label.textContent = formatoActual === 'hex' ? colorHEX : colorHSL
+    colorDiv.appendChild(label)
     contenedor.appendChild(colorDiv)
   }
 }
@@ -72,4 +80,17 @@ const btnGenerar = document.getElementById('generate-palette')
 btnGenerar.addEventListener('click', () => {
   generarPaleta() // Llama a la función para generar la paleta
   mostrarFeedback() // Muestra el feedback
+})
+
+// Alterna entre formato HEX y HSL en las etiquetas
+const btnToggle = document.getElementById('toggle-format')
+btnToggle.addEventListener('click', () => {
+  formatoActual = formatoActual === 'hex' ? 'hsl' : 'hex'
+  btnToggle.textContent =
+    formatoActual === 'hex' ? 'Mostrar HSL' : 'Mostrar HEX'
+  // Actualiza las etiquetas de las tarjetas existentes
+  document.querySelectorAll('.color-card').forEach((card) => {
+    card.querySelector('.color-label').textContent =
+      formatoActual === 'hex' ? card.dataset.hex : card.dataset.hsl
+  })
 })
