@@ -59,7 +59,7 @@ La generación de colores la hice en espacio HSL porque me daba más control sob
 
 El tema visual está manejado con variables CSS globales, así cualquier cambio de color o espaciado se hace en un solo lugar.
 
-Para el localStorage simplemente serializo la paleta en JSON al generarla y la recupero al cargar. Sin complicaciones.
+Para el localStorage simplemente serializo la paleta en JSON al generarla y la recupero al cargar.
 
 ---
 
